@@ -1,0 +1,36 @@
+<div class="row grid-list cushion">
+    <% @items.each do |item| %>
+	<div class="col-md-3 col-sm-4">
+	<div class="item-box box">
+		<a class="item-box" href="/items/<%= item.id %>">
+		<img src="/holder.png">
+		</a>
+		<div class="cushion">
+		<span class="item-price">Rs. <%= item.price %>/-</span>
+		
+<% if user_signed_in? %>
+<% if current_user.id  == item.user_id %>
+		<div class="adminactions">
+			<span class="item-delete">
+				<%= link_to "/items/#{item.id}", method: "delete", :class=> "confirm" do %>
+				<span class="glyphicon glyphicon-remove"></span>
+				<% end %>
+			</span>
+		</div>
+<% end %>
+<% end %>
+		
+		
+		
+<h3>
+        <%= item.title %>
+<span class="item-author">by <a href="/pages/profile?id=<%= item.user_id %>"> <%= User.find(item.user_id).username %></a></span>
+</h3>
+<span class="item-time"><%= time_ago_in_words(item.created_at) %> ago</span>
+</div>
+</div>
+</div>
+</a>
+    <% end %>
+ 
+</div>

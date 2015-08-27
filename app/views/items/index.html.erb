@@ -1,0 +1,103 @@
+
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="cushion gen-box box">
+			<%= image_tag User.where('id = ?',@user.id).first.avatar.url('thumb'), :class=>"owner-image img-circle"  %>
+		<p class="user-username"><%= @user.username %>
+			<span class="user-lastlogin">last online <%= time_ago_in_words(@user.current_sign_in_at)%> ago</span>
+			</p>
+			<div class="follow-meta row">
+				<div class="col-md-4 col-sm-4 col-xs-4"><span class="follow-count"><%= @followcount = Relationship.where('followed_id = ?' ,@user.id).count %></span><br/> followers</div>
+					<div class="col-md-4 col-sm-4 col-xs-4"><span class="following-count"><%= @followingcount = Relationship.where('follower_id = ?' ,@user.id).count %></span><br/> following</div>
+						<div class="col-md-4 col-sm-4 col-xs-4">
+							<% if user_signed_in?%>
+							<% if current_user.id != @user.id %>
+							<%    @instance = Relationship.where('follower_id = ? AND followed_id = ?' ,current_user.id, @user.id).blank? %>
+							<% if  @instance %>
+											<a data-no-turbolink='true' href="#" id="<%= @user.id%>" class="follow-btn btn btn-success"><span id="follow" class="unfollowed">Follow</span></a>	
+											<% else %>
+												<a data-no-turbolink='true' href="#" id="<%= @user.id%>" class="follow-btn btn btn-default"><span id="follow" class="followed">Unfollow</span></a>	</a>
+											<% end %>
+
+											<% end %>
+											<% end %>
+
+					</div>
+			</div>
+		
+		
+	</div>
+		
+	
+		<div class="gen-box box">
+			<ul class="dashboard-menu">
+				<li><a href="/pages/profile?id=<%=@user.id%>">Store</a></li>
+				<li><a href="/pages/favourites?id=<%=@user.id%>">Favourites</a></li>
+				<% if user_signed_in? %>
+				<% if @user.id == current_user.id %>
+					<li><a href="/items">Feed</a></li>
+					
+					<li><a href="/users/edit">Account Settings</a></li>
+				<% end %>
+				<% end %>
+			</ul>
+		</div>
+	
+		<div class="share-btn cushion gen-box box">
+			<h3 class="sub-heading">Spread the word about <br/><%= @user.username %></h3>
+				<a target="_blank" href='https://twitter.com/intent/tweet?url=<%=  @url %>&amp;text=Just created a listing on phonesalad.com for my Phone do check it out.'><img src="../tweetbtn.png" /></a>
+<a target="_blank" href="https://plus.google.com/share?url=<%= @url %>"><img src="../gplusbtn.png"></a>
+		
+			<a target="_blank" href="http://www.facebook.com/sharer/sharer.php?s=100&amp;p[url]=<%= @url %>&amp;p[title]=Just created a listing on phonesalad.com for my Phone do check it out.&amp;p[summary]=My Phone is on sale, do check and buy it from phonesalad.com"><img src="../fbbtn.png"></a>
+		</div>
+	
+	
+</div>
+
+	<div class="col-md-8">
+		<div class="cushion gen-box box">
+		<h3>Items listed by the people you follow</h3>
+		<hr>
+		    <% @items.each do |item| %>
+		    <% @feeditems.each do |feeditem| %>
+		<% if feeditem.followed_id == item.user_id %>
+					<div class="col-md-6 col-sm-6">
+						<div class="item-box box">
+						<a class="item-box" href="/items/<%= item.id %>">
+						<img src="/holder.png">
+						</a>
+						<div class="cushion">
+						<span class="item-price">Rs. <%= item.price %>/-</span>
+
+				<% if user_signed_in? %>
+				<% if current_user.id  == item.user_id %>
+						<div class="adminactions">
+							<span class="item-delete">
+								<%= link_to "/items/#{item.id}", method: "delete", :class=> "confirm" do %>
+								<span class="glyphicon glyphicon-remove"></span>
+								<% end %>
+							</span>
+						</div>
+				<% end %>
+				<% end %>
+
+
+
+				<h3>
+				        <%= item.title %>
+				<span class="item-author">by <a href="/pages/profile?id=<%= item.user_id %>"> <%= User.find(item.user_id).username %></a></span>
+				</h3>
+				<span class="item-time">posted in <%= item.location %> <%= time_ago_in_words(item.created_at) %> ago</span>
+				</div>
+				</div>
+			</div>
+		    <% end %>
+		    <% end %>
+		    <% end %>
+		 
+
+		</div>
+		
+	</div>
+</div>

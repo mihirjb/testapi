@@ -1,0 +1,108 @@
+
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="cushion gen-box box">
+			<%= image_tag User.where('id = ?',@user.id).first.avatar.url('thumb'), :class=>"owner-image img-circle"  %>
+		<p class="user-username"><%= @user.username %>
+			<span class="user-lastlogin">last online <%= time_ago_in_words(@user.current_sign_in_at)%> ago</span>
+		
+		</p>
+		
+			<div class="follow-meta row">
+				<div class="col-md-4 col-sm-4 col-xs-4"><span class="follow-count"><%= @followcount = Relationship.where('followed_id = ?' ,@user.id).count %></span><br/> followers</div>
+					<div class="col-md-4 col-sm-4 col-xs-4"><span class="following-count"><%= @followingcount = Relationship.where('follower_id = ?' ,@user.id).count %></span><br/> following</div>
+						<div class="col-md-4 col-sm-4 col-xs-4">
+							<% if user_signed_in?%>
+							<% if current_user.id != @user.id %>
+							<%    @instance = Relationship.where('follower_id = ? AND followed_id = ?' ,current_user.id, @user.id).blank? %>
+							<% if  @instance %>
+											<a data-no-turbolink='true' href="#" id="<%= @user.id%>" class="follow-btn btn btn-success"><span id="follow" class="unfollowed">Follow</span></a>	
+											<% else %>
+												<a data-no-turbolink='true' href="#" id="<%= @user.id%>" class="follow-btn btn btn-default"><span id="follow" class="followed">Unfollow</span></a>	</a>
+											<% end %>
+
+											<% end %>
+											<% end %>
+
+					</div>
+			</div>
+		
+	</div>
+		
+		<div class="gen-box box">
+			<ul class="dashboard-menu">
+				<li><a href="/pages/profile?id=<%=@user.id%>">Store</a></li>
+				<li><a href="/pages/favourites?id=<%=@user.id%>">Favourites</a></li>
+				<li><a href="/users/edit">Account Settings</a></li>
+			</ul>
+		</div>
+	
+	
+		<div class="share-btn cushion gen-box box">
+			<h3 class="sub-heading">Spread the word about <br/><%= @user.username %></h3>
+				<a target="_blank" href='https://twitter.com/intent/tweet?url=<%=  @url %>&amp;text=Just created a listing on phonesalad.com for my Phone do check it out.'><img src="../tweetbtn.png" /></a>
+<a target="_blank" href="https://plus.google.com/share?url=<%= @url %>"><img src="../gplusbtn.png"></a>
+		
+			<a target="_blank" href="http://www.facebook.com/sharer/sharer.php?s=100&amp;p[url]=<%= @url %>&amp;p[title]=Just created a listing on phonesalad.com for my Phone do check it out.&amp;p[summary]=My Phone is on sale, do check and buy it from phonesalad.com"><img src="../fbbtn.png"></a>
+		</div>
+	
+	
+</div>
+
+	<div class="col-md-8">
+		<div class="cushion gen-box box">
+
+			<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+			  <%= devise_error_messages! %>
+				
+					<div class="newPaperclipFiles field">
+					<p>		<%= image_tag @user.avatar.url(:medium), :class=>"owner-image img-circle" %><br/>
+							<%= f.label :avatar, "Upload your Profile picture" %><%= f.file_field :avatar, :class=> "small-input-file" %><br/></p>
+				</div>
+
+			<div class="field">
+			    <%= f.label :username %><br />
+			    <%= f.email_field :username, autofocus: true %>
+			  </div>
+
+			  <div class="field">
+			    <%= f.label :email %><br />
+			    <%= f.email_field :email %>
+			  </div>
+
+
+			  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+			    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+			  <% end %>
+
+			  <div class="field">
+			    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
+			    <%= f.password_field :password, autocomplete: "off" %>
+			  </div>
+
+			  <div class="field">
+			    <%= f.label :password_confirmation %><br />
+			    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+			  </div>
+
+			  <div class="field">
+			    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
+			    <%= f.password_field :current_password, autocomplete: "off" %>
+			  </div>
+
+			  <div class=" field actions">
+			    <%= f.submit "Update", :class=>"btn btn-default" %>
+			  </div>
+			<% end %>
+<div class="grey-area">
+			<h3>Cancel my account</h3>
+
+			<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, :class=>"btn btn-default"  %></p>
+
+</div>
+
+	</div>
+		
+	</div>
+</div>

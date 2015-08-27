@@ -1,0 +1,122 @@
+	<div class="row">
+	<div class="col-md-6">
+			<div class="gen-box box cushion item-box">
+				<% if user_signed_in? %>
+				<% if current_user.id  == @item.user_id %>
+						<div class="adminactions">
+							<span class="item-delete">
+								<%= link_to "/items/#{@item.id}", method: "delete", :class=> "confirm" do %>
+								<span class="glyphicon glyphicon-remove"></span>
+								<% end %>
+							</span>
+						</div>
+				<% end %>
+				<% end %>
+
+				<span class="item-price">Rs. <%= @item.price %>/-</span>
+		<img src="/holder.png">
+		<div class="thumbs-wrap">
+		<div class="img-box box">
+			<img src="/holder.png">
+		</div>
+		<div class="img-box box">
+			<img src="/holder.png">
+		</div>
+		<div class="img-box box">
+			<img src="/holder.png">
+		</div>
+		<div class="img-box box">
+			<img src="/holder.png">
+		</div>
+		<div class="img-box box">
+			<img src="/holder.png">
+		</div>
+		</div>
+	</div>
+	
+	
+
+					<% if user_signed_in? %>
+					<div class="gen-box box cushion">
+					<div class="comment-form">
+					<%= form_for @comment, :class=>"form-horizontal",  :role => "form", :html => { :multipart => true } do |f| %>
+
+				<div class="form-group">
+					<h4> Add a new Comment</h4>
+					<br/>
+					<%= f.text_area :commentbody, :class=> "form-control", :placeholder=>"Write something here" %>
+					<br/>
+				<%= f.hidden_field :item_id, :value => @item.id %>
+				<%= f.hidden_field :user_id, :value => current_user.id %>
+				<input type="text" name="foo" style="display: none;">
+				</div>
+				<%= f.submit "Add a comment", :disable_with => 'Adding...', :class =>"btn red-color submit" %>
+				</div>
+				</div>
+				<% end %>
+				
+				<% else %>
+				<%= link_to "Log in to comment", new_user_session_path, :class => "btn btn-success" %> 
+				<% end %>
+
+	
+	
+	
+	
+	</div>
+	
+	<div class="col-md-6">
+				<div class="gen-box box cushion">
+			<h3>
+			    <%= @item.title %>
+					<% if user_signed_in?%>
+					<%    @instance = current_user.favorites.where('item_id = ?' ,@item.id).blank? %>
+					<% if  @instance %>
+									<a href="#" id="<%= @item.id%>" class="favorite"><span id="fav" class="glyphicon glyphicon-heart-empty"></span></a>	<span class="item-favcount"><%=@favcount%></span>
+									<% else %>
+										<a href="#" id="<%= @item.id%>" class="favorite"><span id="fav" class="glyphicon glyphicon-heart"></span></a>	<span class="item-favcount"><%=@favcount%></span>
+									<% end %>
+									<% else %>
+										<span id="fav" class="glyphicon glyphicon-heart"></span>	<span class="item-favcount"><%=@favcount%></span>
+									<% end %>
+
+
+
+			</h3>
+
+				<hr/>
+
+			<div class="text-content">
+			<p class="cushion"><%= linkify_hashtags(@item.description) %></p>
+				<span class="item-time">listed by <%= User.find(@item.user_id).username %> <%= time_ago_in_words(@item.created_at) %> ago in <%= @item.location %></span>
+
+			</div>
+		</div>
+		
+		
+		
+		
+			<div class="gen-box box cushion">
+
+					<h4>All comments (<%= Comment.get_comment_count(@item.id)%>)</h4>
+
+						<hr/>
+						<% @comments.each do |comment| %>
+						<div class="comment-box box">
+							<p><span class="user-image"><%= image_tag User.where('id = ?',comment.user_id).first.avatar.url('mini'), :class=>"owner-image img-circle super-small-img"  %></span>
+						<strong><%= User.find(comment.user_id).username %> :</strong> 
+						<%= comment.commentbody %>
+							<span class="comment-time"><%= time_ago_in_words(comment.created_at) %> ago</span> 
+							
+							</p>
+
+						</div>
+						<% end %>
+			</div>	
+
+
+
+		
+	</div>
+	</div>
+
