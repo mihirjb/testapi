@@ -1,6 +1,6 @@
 	<div class="row">
 	<div class="col-md-6">
-			<div class="gen-box box cushion item-box">
+			<div class="gen-box box cushion item-box post">
 				<% if user_signed_in? %>
 				<% if current_user.id  == @item.user_id %>
 						<div class="adminactions">
@@ -9,28 +9,24 @@
 								<span class="glyphicon glyphicon-remove"></span>
 								<% end %>
 							</span>
+							<span class="item-delete">
+								<%= link_to "/items/#{@item.id}/edit" do %>
+								<span class="glyphicon glyphicon-pencil"></span>
+								<% end %>
+							</span>
 						</div>
 				<% end %>
 				<% end %>
 
 				<span class="item-price">Rs. <%= @item.price %>/-</span>
-		<img src="/holder.png">
+			    <%= image_tag @item.pictures.first.image.url('small') unless @item.pictures.first.nil? %>
 		<div class="thumbs-wrap">
-		<div class="img-box box">
-			<img src="/holder.png">
-		</div>
-		<div class="img-box box">
-			<img src="/holder.png">
-		</div>
-		<div class="img-box box">
-			<img src="/holder.png">
-		</div>
-		<div class="img-box box">
-			<img src="/holder.png">
-		</div>
-		<div class="img-box box">
-			<img src="/holder.png">
-		</div>
+	
+			<%  @item.pictures.each do |pic| %>											
+		    	<div class="img-box box">
+				<%= image_tag pic.image.url('small') %>
+				</div>
+			<%end%>
 		</div>
 	</div>
 	

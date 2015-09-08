@@ -1,4 +1,4 @@
-<%= form_for(@item) do |f| %>
+<%= form_for @item, :html => { :multipart => true } do |f| %>
   <% if @item.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h2>
@@ -15,26 +15,26 @@
 	<%= f.hidden_field :user_id, :value=> current_user.id, :readonly => true %>
 </div>
 
-  <div class="field">
-    <%= f.label :title %><br>
-    <%= f.text_field :title %>
-  </div>
-  <div class="field">
-	<%= f.label :description %><br>
-    <%= f.text_area :description %>
-  </div>
-  <div class="field">
-    <%= f.label :price %><br>
-    <%= f.text_field :price %>
-  </div>
-  <div class="field">
-    <%= f.label :location %><br>
-    <%= f.text_field :location %>
+<div class="control-group">
+    <%= f.label :pictures, :class => 'control-label' %>
+    <div class="controls">
+      <!-- The magic is coming ...look at my eyes....shazammmm -->
+      <!-- Use HTML5 multiple attribute to enable multiple selection
+           and pass back to controller all files as an array, ready 
+           for paperclip!!
+           file_field_tag, since images is not a gallery attribute
+       -->
+      <%= file_field_tag "images[]", type: :file, multiple: true %>
+    </div>
   </div>
 
- <div class="field">
-    <%= f.label :category %><br />
-    <%= f.collection_select(:category_id, @categories, :id, :catname, :include_blank => "Please select") %>
+
+  <div class="field">
+    <%= f.text_field :title, :placeholder => "Title", :class => "form-control" %>
+    <%= f.text_area :description, :placeholder => "Description", :class => "form-control" %>
+    <%= f.text_field :price, :placeholder => "Price", :class => "form-control" %>
+    <%= f.text_field :location, :placeholder => "Location", :class => "form-control" %>
+    <%= f.collection_select(:category_id, @categories, :id, :catname, :include_blank => "Please select", :class => "form-control") %>
   </div>
   <div class="actions field">
     <%= f.submit %>

@@ -4,7 +4,19 @@ class PagesController < ApplicationController
   respond_to :html,:json
   
   def home
+    
     @items = Item.all
+    
+     respond_to do |format|
+        format.html {
+          respond_with(@items)
+          }
+
+      format.json {
+        render :json => { :items => @items }
+      }
+    end
+    
   end
 
   def about

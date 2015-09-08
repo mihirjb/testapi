@@ -58,37 +58,49 @@
 		<h3>Items listed by the user</h3>
 		<hr>
 		    <% @items.each do |item| %>
-			<div class="col-md-6 col-sm-6">
-				<div class="item-box box">
-				<a class="item-box" href="/items/<%= item.id %>">
-				<img src="/holder.png">
-				</a>
-				<div class="cushion">
-				<span class="item-price">Rs. <%= item.price %>/-</span>
+		<div class="col-md-6 col-sm-6 col-xs-12">
+			<div class="posts-wrapper">
+			  <div class="post">
+			    <div class="post-head">
+			      <div class="thumb-img">
 
-		<% if user_signed_in? %>
-		<% if current_user.id  == item.user_id %>
-				<div class="adminactions">
-					<span class="item-delete">
-						<%= link_to "/items/#{item.id}", method: "delete", :class=> "confirm" do %>
-						<span class="glyphicon glyphicon-remove"></span>
+			      </div>
+			      <div class="user-name">
+			        <a href="pages/profile?id=<%=item.user_id%>"><%= item.user.username %></a>
+			      </div>
+			      <div class="time-ago">
+			        <%= time_ago_in_words item.created_at %>
+			      </div>
+			    </div>
+			    <div class="image">
+					<a class="block-link" href="/items/<%= item.id %>">
+					    <%= image_tag item.pictures.first.image.url('small') unless item.pictures.first.nil? %>
+					</a>
+			    </div>
+			    <div class="post-bottom">
+			      <div class="caption">
+			        <div class="caption-content cushion">
+			          <%= item.title %>
+						<% if user_signed_in? %>
+						<% if current_user.id  == item.user_id %>
+								<div class="adminactions">
+									<span class="item-delete">
+										<%= link_to "/items/#{item.id}", method: "delete", :class=> "confirm" do %>
+										<span class="glyphicon glyphicon-remove"></span>
+										<% end %>
+									</span>
+								</div>
 						<% end %>
-					</span>
-				</div>
-		<% end %>
-		<% end %>
+						<% end %>
+			        </div>
+			      </div>
+			    </div>
+			  </div>
+			</div>
 
 
-
-		<h3>
-		        <%= item.title %>
-		<span class="item-author">by <a href="/pages/profile?id=<%= item.user_id %>"> <%= User.find(item.user_id).username %></a></span>
-		</h3>
-		<span class="item-time">posted in <%= item.location %> <%= time_ago_in_words(item.created_at) %> ago</span>
 		</div>
-		</div>
-	</div>
-			</a>
+
 		    <% end %>
 
 		</div>

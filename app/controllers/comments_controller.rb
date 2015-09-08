@@ -10,12 +10,17 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @comment = Comment.new(comment_params)
-     if @comment.save
-        redirect_to :back, :notice => "Congratulations, comment created Successfully."
-      else
-        redirect_to :back, :notice => "Alas, comment could not be created."
-      end
+     @comment = current_user.comments.build(comment_params)
+           respond_to do |format|
+          if @comment.save
+            format.html {redirect_to :back, :notice => "Congratulations, comment created Successfully."} 
+            format.json { render json: {comment: @comment}, status: :created, location: @comment }
+          else
+            format.html { redirect_to :back, :notice => "Alas, comment could not be created."}
+            format.json { render json: @comment.errors, status: :unprocessable_entity }
+          end
+        end
+      
   end
 
   def destroy

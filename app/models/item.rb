@@ -25,12 +25,7 @@ class Item < ActiveRecord::Base
   has_many :users, :through => :favorites
   
   
+  has_many :pictures, :dependent => :destroy
   
-  def as_json(options={})
-    {
-      id: self.id,
-      title: self.title
-    }
-  end
   
 end

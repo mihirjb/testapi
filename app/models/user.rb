@@ -39,7 +39,7 @@ acts_as_token_authenticatable
          has_many :relationships, :dependent =>:destroy
       
         has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>", :mini => "30x30>" }, :default_url => "/images/users/avatars/:style/missing.png"
-         # validates_attachment_content_type :avatar, :content_type => %w(image/jpeg image/jpg image/png)
+        validates_attachment_content_type :avatar, :content_type => %w(image/jpeg image/jpg image/png)
       
          
          

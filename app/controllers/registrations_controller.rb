@@ -3,6 +3,8 @@ class RegistrationsController < Devise::RegistrationsController
   before_filter :configure_permitted_parameters
 
 respond_to :html,:json
+layout "form"
+
 
   # GET /users/sign_up
   def new
@@ -16,7 +18,13 @@ respond_to :html,:json
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u|
-      u.permit(:email, :password, :password_confirmation, :firstname, :profile_attributes => :country)
+      u.permit(:email, :password, :password_confirmation, :username, :avatar)
     }
+    
+     devise_parameter_sanitizer.for(:account_update) { |u|
+        u.permit(:email, :password, :password_confirmation, :username, :avatar, :current_password)
+      }
   end
+  
+  
 end
